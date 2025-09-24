@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>О нас - Лапшичная Ванька</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/8.0.20/jsrsasign-all-min.js"></script>
+    <link rel="stylesheet" href="avatar.css">
+</head>
+<body style="background-color: #DFDBE5;">
+    <nav class="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <a href="index.html" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <img src="images/logo.jpg" class="w-10 h-10 rounded-lg" alt="Лого Лапшичной">
+                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Лапшичная Ванька</span>
+            </a>
+            <!-- Кнопка бургер-меню для мобильных -->
+            <div class="flex items-center md:order-2 space-x-3 rtl:space-x-reverse">
+                <button id="mobile-menu-button" type="button" class="md:hidden inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-sticky" aria-expanded="false">
+                    <span class="sr-only">Открыть меню</span>
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+                    </svg>
+                </button>
+                <div id="auth-section">
+                    <div id="user-menu" class="hidden relative">
+                        <button id="user-menu-button" class="flex items-center focus:outline-none">
+                            <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold overflow-hidden">
+                                <span id="user-avatar" class="w-full h-full flex items-center justify-center"></span>
+                            </div>
+                        </button>
+                        <div id="user-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 hidden z-50">
+                            <div class="px-4 py-2 border-b">
+                                <p class="text-gray-800 font-semibold" id="user-fullname"></p>
+                                <p class="text-gray-600 text-sm" id="user-login"></p>
+                            </div>
+                            <a href="account.html" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">Мой аккаунт</a>
+                            <a href="admin.html" id="adminPage" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white hidden relative">Админ-панель</a>
+                            <a href="employee.html" id="employeePage" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white hidden relative">Страница сотрудника</a>
+                            <button id="logout-btn" class="block w-full text-left px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">Выйти</button>
+                        </div>
+                    </div>
+                </div>
+                <a href="authentication.html" id="login-btn" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"> Войти </a>
+            </div>
+            <!-- Навигационная панель -->
+            <div class="hidden md:flex items-center justify-between w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
+                <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                    <li>
+                        <a href="index.html" class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Главная</a>
+                    </li>
+                    <li>
+                        <a href="about.html" class="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500" aria-current="page">О нас</a>
+                    </li>
+                    <li>
+                        <a href="menu.html" class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Меню</a>
+                    </li>
+                    <li>
+                        <a href="cart.html" class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Корзина</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Мобильное меню (будет появляться при нажатии на бургер) -->
+    <div id="mobile-menu" class="md:hidden hidden fixed top-16 left-0 w-full bg-white dark:bg-gray-900 shadow-lg z-10">
+        <ul class="flex flex-col p-4 font-medium border-b border-gray-200 dark:border-gray-600">
+            <li class="border-b border-gray-200 dark:border-gray-600 py-2">
+                <a href="index.html" class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Главная</a>
+            </li>
+            <li class="border-b border-gray-200 dark:border-gray-600 py-2">
+                <a href="about.html" class="block py-2 px-3 text-white bg-blue-700 rounded-sm" aria-current="page">О нас</a>
+            </li>
+            <li class="border-b border-gray-200 dark:border-gray-600 py-2">
+                <a href="menu.html" class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Меню</a>
+            </li>
+            <li class="py-2">
+                <a href="cart.html" class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Корзина</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="pt-20 pb-10 px-4">
+        <h1 class="text-4xl font-bold text-center">О нас</h1>
+        <p class="text-center text-gray-600 mt-4">Узнайте больше о нашей лапшичной</p>
+    </div>
+
+    <section class="max-w-screen-xl mx-auto py-12 px-4">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+                <h2 class="text-3xl font-bold mb-4">Наша история</h2>
+                <p class="text-gray-700 mb-4">Лапшичная "Ванька" была основана в 2015 году с целью привнести в наш город настоящую домашнюю лапшу, приготовленную по старинным рецептам.</p>
+                <p class="text-gray-700 mb-4">Начиная с маленькой кухни и всего трех столиков, мы выросли в популярное место, куда приходят за вкусной едой и теплой атмосферой.</p>
+                <p class="text-gray-700">Мы гордимся тем, что используем только свежие и качественные продукты, а наши повара вкладывают душу в каждое блюдо.</p>
+            </div>
+            <div>
+                <img src="images/лапшичнаяФон.jpg" alt="Интерьер лапшичной" class="rounded-lg shadow-lg w-full">
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-100 py-12">
+        <div class="max-w-screen-xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8">Наши ценности</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Качество</h3>
+                    <p class="text-gray-600">Мы используем только свежие и натуральные ингредиенты для приготовления наших блюд.</p>
+                </div>
+                <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Команда</h3>
+                    <p class="text-gray-600">Наши повара - настоящие профессионалы с многолетним опытом работы.</p>
+                </div>
+                <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Традиции</h3>
+                    <p class="text-gray-600">Мы сохраняем и развиваем традиции приготовления настоящей домашней лапши.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-12">
+        <div class="max-w-screen-xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8">Наша команда</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                    <img src="images/Азиз.jpg" alt="Шеф-повар" class="w-32 h-32 rounded-full mx-auto mb-4">
+                    <h3 class="text-xl font-bold">Иван Петров</h3>
+                    <p class="text-gray-600 mb-2">Шеф-повар</p>
+                    <p class="text-gray-700">С более чем 15-летним опытом работы в лучших ресторанах города.</p>
+                </div>
+                <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                    <img src="images/Тимоха.jpg" alt="Повар" class="w-32 h-32 rounded-full mx-auto mb-4">
+                    <h3 class="text-xl font-bold">Мария Сидорова</h3>
+                    <p class="text-gray-600 mb-2">Повар</p>
+                    <p class="text-gray-700">Специалист по азиатской кухне с авторскими рецептами лапши.</p>
+                </div>
+                <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                    <img src="images/Рома.jpg" alt="Менеджер" class="w-32 h-32 rounded-full mx-auto mb-4">
+                    <h3 class="text-xl font-bold">Алексей Козлов</h3>
+                    <p class="text-gray-600 mb-2">Менеджер</p>
+                    <p class="text-gray-700">Обеспечивает безупречный сервис и комфорт наших гостей.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white dark:bg-gray-900">
+        <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
+            <div class="md:flex md:justify-between">
+                <div class="mb-6 md:mb-0">
+                    <a href="index.html" class="flex items-center">
+                        <img src="images/logo.jpg" class="w-10 h-10 rounded-lg me-3" alt="Лого Лапшичной" />
+                        <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Лапшичная Ванька</span>
+                    </a>
+                </div>
+                <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
+                    <div>
+                        <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Связь с нами</h2>
+                        <ul class="text-gray-500 dark:text-gray-400 font-medium">
+                            <li class="mb-4"><a href="https://www.gosuslugi.ru/" class="hover:underline">Госуслуги</a></li>
+                            <li><a href="https://t.me/" class="hover:underline">Telegram</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Информация</h2>
+                        <ul class="text-gray-500 dark:text-gray-400 font-medium">
+                            <li class="mb-4"><a href="#" class="hover:underline">Доставка и оплата</a></li>
+                            <li><a href="#" class="hover:underline">Акции</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700" />
+            <div class="sm:flex sm:items-center sm:justify-between">
+                <span class="text-sm text-gray-500 dark:text-gray-400">© 2025 Лапшичная Ванька™. Все права защищены.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="js/avatar.js"></script>
+</body>
+</html>
