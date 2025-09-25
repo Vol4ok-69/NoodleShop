@@ -33,7 +33,6 @@ async function loadUserData() {
 
     displayUserData(userData);
   } catch (err) {
-    console.error('Ошибка загрузки данных или декодирования токена:', err);
     localStorage.removeItem('token');
     window.location.href = 'authentication.html';
   }
@@ -224,7 +223,6 @@ window.saveField = async function(field) {
     await Swal.fire({ icon: 'success', title: 'Успех', text: 'Данные успешно обновлены' });
     window.location.reload();
   } catch (err) {
-    console.error('Ошибка сохранения поля:', err);
     Swal.fire({ icon: 'error', title: 'Ошибка', text: 'Не удалось обновить данные' });
   }
 };
@@ -258,7 +256,6 @@ window.changePassword = async function() {
     await Swal.fire({ icon: 'success', title: 'Успех', text: 'Пароль успешно изменен' });
     window.location.reload();
   } catch (err) {
-    console.error('Ошибка смены пароля:', err);
     Swal.fire({ icon: 'error', title: 'Ошибка', text: 'Не удалось изменить пароль' });
   }
 };
@@ -290,7 +287,6 @@ async function onAvatarSelected(e) {
     window.location.reload();
     document.getElementById('remove-avatar-btn').textContent = 'Удалить фото';
   } catch (err) {
-    console.error('Ошибка обработки аватара:', err);
     Swal.fire({ icon: 'error', title: 'Ошибка', text: 'Не удалось загрузить изображение' });
   } finally {
     if (changeBtn) { changeBtn.disabled = false; changeBtn.textContent = prevText; }
@@ -357,7 +353,6 @@ async function onRemoveAvatar() {
     await Swal.fire({ icon: 'success', title: 'Готово', text: 'Фото удалено' });
     window.location.reload();
   } catch (err) {
-    console.error('Ошибка удаления аватара:', err);
     Swal.fire({ icon: 'error', title: 'Ошибка', text: 'Не удалось удалить фото' });
   }
 }

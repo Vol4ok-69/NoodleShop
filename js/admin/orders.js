@@ -55,7 +55,6 @@ async function onChangeStatus(e) {
     await update(orderRef, { status: newStatus });
     Swal.fire({ icon: 'success', title: 'Успех', text: 'Статус обновлён' });
   } catch (err) {
-    console.error(err);
     Swal.fire({ icon: 'error', title: 'Ошибка', text: 'Не удалось изменить статус' });
   }
 }

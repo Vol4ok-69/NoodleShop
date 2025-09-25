@@ -44,7 +44,6 @@ export function initModal() {
           await addDish(dishData);
         }
       } catch (err) {
-        console.error(err);
       } finally {
         modal?.classList.add('hidden');
       }

@@ -7,11 +7,9 @@ export function GetUserFromToken() {
             const userFromToken = JSON.parse(atob(token.split('.')[1]));
             return userFromToken;
         } catch (e) {
-            console.error(e);
             return null;
         }
     } else {
-        console.warn("Токена не найдено");
         return null;
     }
 }
@@ -30,11 +28,9 @@ export async function GetUserFromBase() {
                 return Object.values(users).find(u => u && u.id === userFromToken.userId);
             }
         } catch (e) {
-            console.error(e);
             return null;
         }
     } else {
-        console.warn("Токена не найдено");
         return null;
     }
 }

@@ -13,7 +13,8 @@ export function loadDishes() {
     sortDishes(sortField, false);
     updateDishesStatistics(dishesData);
     displayDishes(dishesData);
-  }, (err) => console.error('dishes onValue error', err));
+  },
+  (err) => console.error('dishes onValue error', err));
 }
 
 export function displayDishes(dishes) {
@@ -70,7 +71,6 @@ async function onDeleteDish(e) {
     await remove(dishRef);
     Swal.fire({ icon: 'success', title: 'Удалено', text: 'Блюдо удалено' });
   } catch (err) {
-    console.error(err);
     Swal.fire({ icon: 'error', title: 'Ошибка', text: 'Не удалось удалить блюдо' });
   }
 }
@@ -92,7 +92,6 @@ export async function addDish(dishData) {
     }
     Swal.fire({ icon: 'success', title: 'Успех', text: 'Блюдо добавлено' });
   } catch (err) {
-    console.error(err);
     Swal.fire({ icon: 'error', title: 'Ошибка', text: err.message || 'Не удалось добавить блюдо' });
   }
 }
@@ -105,7 +104,6 @@ export async function updateDish(dishId, dishData) {
     await update(dishRef, dishData);
     Swal.fire({ icon: 'success', title: 'Успех', text: 'Блюдо обновлено' });
   } catch (err) {
-    console.error(err);
     Swal.fire({ icon: 'error', title: 'Ошибка', text: 'Не удалось обновить блюдо' });
   }
 }

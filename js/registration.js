@@ -117,7 +117,6 @@ async function registrationUser() {
             });
         }
     } catch (error) {
-        console.error('Ошибка при регистрации:', error);
         Swal.fire({
             icon: "error",
             title: "Ошибка...",
@@ -154,14 +153,12 @@ async function GetId() {
         const snapshot = await get(ref(db, '/'));
         const allData = snapshot.val();
         
-        // Получаем массив пользователей
         const users = allData && allData.Users ? allData.Users : [];
         
         if (users.length === 0) {
             return Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
         }
         
-        // Находим максимальный ID
         let maxId = 0;
         for (const user of users) {
             if (user && user.id) {
@@ -175,7 +172,6 @@ async function GetId() {
         return maxId > 0 ? maxId + 1 : Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
         
     } catch (error) {
-        console.error('Ошибка при получении ID:', error);
         return Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
     }
 }

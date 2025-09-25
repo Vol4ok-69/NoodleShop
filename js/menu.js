@@ -5,7 +5,6 @@ import { addToCart } from './cart.js';
 function loadMenu() {
     const menuContainer = document.getElementById('menu-container');
     if (!menuContainer) {
-        console.error('menu-container not found in DOM');
         return;
     }
     
@@ -83,7 +82,6 @@ function loadMenu() {
         });
         
     }, (error) => {
-        console.error("Ошибка загрузки меню: ", error);
         if (menuContainer) {
             menuContainer.innerHTML = `
                 <div class="col-span-3 text-center py-10">

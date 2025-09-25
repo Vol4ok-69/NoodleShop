@@ -52,7 +52,6 @@ async function onRoleChange(e) {
     await update(userRef, { post: newRole });
     Swal.fire({ icon: 'success', title: 'Успех', text: 'Роль пользователя обновлена' });
   } catch (err) {
-    console.error(err);
     Swal.fire({ icon: 'error', title: 'Ошибка', text: 'Не удалось обновить роль' });
   }
 }
@@ -74,7 +73,6 @@ async function onDeleteUser(e) {
     await remove(userRef);
     Swal.fire({ icon: 'success', title: 'Удалено', text: 'Пользователь удалён' });
   } catch (err) {
-    console.error(err);
     Swal.fire({ icon: 'error', title: 'Ошибка', text: 'Не удалось удалить пользователя' });
   }
 }

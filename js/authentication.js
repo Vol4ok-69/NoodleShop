@@ -54,7 +54,7 @@ async function loginUser() {
         
         window.location.href = "index.html";
     } else {
-            console.error('Пользователь не найден или неверный логин(email)/пароль.');
+           
             Swal.fire({
                 icon: "error",
                 title: "Ошибка...",
@@ -62,7 +62,6 @@ async function loginUser() {
               });
         }
     } catch (error) {
-        console.error('Ошибка при получении данных пользователя:', error);
     }
 }
 

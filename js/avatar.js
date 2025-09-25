@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', async function() {
           userAvatar.style.backgroundSize = 'cover';
           userAvatar.style.backgroundPosition = 'center';
         } catch (e) {
-          console.error('Ошибка загрузки аватара:', e);
           userAvatar.textContent = user.name.charAt(0) + user.surname.charAt(0);
         }
       } else {
@@ -63,7 +62,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         employeePage.classList.remove('hidden');
     }
   } catch (e) {
-    console.error(e);
   }
   
   logoutBtn.addEventListener('click', function() {

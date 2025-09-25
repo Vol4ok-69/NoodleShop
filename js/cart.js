@@ -9,7 +9,6 @@ let currentUser = (function() {
         const payload = JSON.parse(atob(token.split('.')[1]));
         return payload.userId;
     } catch (e) {
-        console.error('Ошибка декодирования токена при инициализации currentUser:', e);
         localStorage.removeItem('token');
         return null;
     }
@@ -31,7 +30,6 @@ function loadUserData() {
             const payload = JSON.parse(atob(token.split('.')[1]));
             currentUser = payload.userId;
         } catch (e) {
-            console.error('Ошибка декодирования токена:', e);
             localStorage.removeItem('token');
             currentUser = null;
         }
@@ -58,7 +56,6 @@ function loadCart() {
             displayEmptyCart();
         }
     }, (error) => {
-        console.error('Ошибка загрузки корзины:', error);
         displayEmptyCart();
     });
 }
@@ -237,7 +234,6 @@ export async function addToCart(dish) {
                 const payload = JSON.parse(atob(token.split('.')[1]));
                 currentUser = payload.userId;
             } catch (e) {
-                console.error('Ошибка декодирования токена при добавлении в корзину:', e);
                 localStorage.removeItem('token');
                 currentUser = null;
             }
