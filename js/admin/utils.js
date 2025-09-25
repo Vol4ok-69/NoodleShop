@@ -1,6 +1,5 @@
 import { db, ref, get } from '../firebase-config.js';
 
-// Находит ключ по полю id в коллекции Realtime DB (поддерживает массив или объект)
 export async function findKeyById(collectionPath, id) {
   const refCol = ref(db, collectionPath);
   const snap = await get(refCol);

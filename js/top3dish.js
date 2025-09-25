@@ -39,12 +39,10 @@ function loadTop3Dishes() {
             return bPurchased - aPurchased;
         });
         
-        //берем первые 3 блюда
         const top3Dishes = dishes.slice(0, 3);
         
         console.log("Top 3 dishes by purchases:", top3Dishes);
         
-        //создаем карточки для каждого блюда
         top3Dishes.forEach((dish) => {
             console.log("Processing dish:", dish.id, dish);
             const dishCard = `

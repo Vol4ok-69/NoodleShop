@@ -5,7 +5,6 @@ export function initModal() {
   const closeBtn = document.getElementById('close-modal');
   const form = document.getElementById('dish-form');
 
-  // делегированное открытие кнопки (на случай, если кнопка рендерится позже)
   document.addEventListener('click', (ev) => {
     const target = ev.target;
     if (!target) return;
@@ -70,7 +69,7 @@ function openEditModal(dish) {
   if (!modal || !form) return;
   document.getElementById('modal-title').textContent = 'Редактировать блюдо';
   const keyEl = document.getElementById('dish-key');
-  if (keyEl) keyEl.value = ''; // при необходимости сюда можно положить реальный ключ
+  if (keyEl) keyEl.value = '';
   document.getElementById('dish-id').value = dish.id || '';
   document.getElementById('dish-name').value = dish.name || '';
   document.getElementById('dish-category').value = dish.category || '';

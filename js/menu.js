@@ -14,7 +14,7 @@ function loadMenu() {
     onValue(dishesRef, (snapshot) => {
         const data = snapshot.val();
         
-        menuContainer.innerHTML = ''; // очищаем на всякий случай
+        menuContainer.innerHTML = '';
         
         if (!data) {
             menuContainer.innerHTML = `
@@ -26,17 +26,13 @@ function loadMenu() {
             return;
         }
         
-        // Формируем массив блюд вне зависимости от того, массив ли это или объект
         let dishes = [];
         if (Array.isArray(data)) {
-            // данные — массив объектов (как у тебя в БД)
             dishes = data.filter(Boolean).map(d => ({ id: d.id || d.name || '', ...d }));
         } else {
-            // данные — объект, ключи — id
             dishes = Object.keys(data).map(key => ({ id: data[key].id || key, ...data[key] }));
         }
         
-        // Группируем по категориям
         const categories = {};
         dishes.forEach(dish => {
             const category = dish.category || 'Другое';
@@ -44,12 +40,10 @@ function loadMenu() {
             categories[category].push(dish);
         });
         
-        // Создаем секции для каждой категории
         Object.keys(categories).forEach(category => {
             const categorySection = document.createElement('div');
             categorySection.className = 'category-section mb-12';
             
-            // Заголовок категории
             categorySection.innerHTML = `
                 <h2 class="text-3xl font-bold mb-8 text-center">${category}</h2>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 category-dishes"></div>
@@ -84,7 +78,6 @@ function loadMenu() {
             });
         });
         
-        // Навешиваем обработчики на кнопки "В корзину"
         document.querySelectorAll('.add-to-cart').forEach(button => {
             button.addEventListener('click', addToCartHandler);
         });

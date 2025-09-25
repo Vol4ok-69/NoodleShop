@@ -14,7 +14,6 @@
   <link rel="stylesheet" href="avatar.css" />
 
   <style>
-    /* Доп. мелкие стили для табов */
     .admin-header {
       background-color: #DFDBE5;
     }
@@ -30,7 +29,7 @@
       cursor: pointer;
       font-weight: 600;
       position: relative;
-      color: #111827; /* gray-900 */
+      color: #111827;
     }
     .tab-button::after {
       content: "";
@@ -45,14 +44,12 @@
       transform: scaleX(0);
     }
     .tab-button.active {
-      color: #0f172a; /* dark */
+      color: #0f172a;
     }
     .tab-button.active::after {
-      background: #2563eb; /* blue-600 */
+      background: #2563eb;
       transform: scaleX(1);
     }
-
-    /* небольшая адаптация под мобильные */
     @media (max-width: 640px) {
       .tabs-list { gap: 1rem; }
       .tab-button { font-size: 0.95rem; }
@@ -67,7 +64,6 @@
                 <img src="images/logo.jpg" class="w-10 h-10 rounded-lg" alt="Лого Лапшичной">
                 <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Лапшичная Ванька</span>
             </a>
-            <!-- Кнопка бургер-меню для мобильных -->
             <div class="flex items-center md:order-2 space-x-3 rtl:space-x-reverse">
                 <button id="mobile-menu-button" type="button" class="md:hidden inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-sticky" aria-expanded="false">
                     <span class="sr-only">Открыть меню</span>
@@ -96,7 +92,6 @@
                 </div>
                 <a href="authentication.html" id="login-btn" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"> Войти </a>
             </div>
-            <!-- Навигационная панель -->
             <div class="hidden md:flex items-center justify-between w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
                 <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
                     <li>
@@ -116,7 +111,6 @@
         </div>
     </nav>
 
-    <!-- Мобильное меню (будет появляться при нажатии на бургер) -->
     <div id="mobile-menu" class="md:hidden hidden fixed top-16 left-0 w-full bg-white dark:bg-gray-900 shadow-lg z-10">
         <ul class="flex flex-col p-4 font-medium border-b border-gray-200 dark:border-gray-600">
             <li class="border-b border-gray-200 dark:border-gray-600 py-2">
@@ -134,7 +128,6 @@
         </ul>
     </div>
 
-  <!-- Заголовок -->
   <header class="pt-24 pb-8">
     <div class="max-w-screen-xl mx-auto px-4 text-center">
       <h1 class="text-5xl font-extrabold leading-tight">Админ-панель</h1>
@@ -142,7 +135,6 @@
     </div>
   </header>
 
-  <!-- Вкладки -->
   <div class="max-w-screen-xl mx-auto px-4">
     <div class="mt-8">
       <nav class="tabs-list">
@@ -154,9 +146,7 @@
     </div>
   </div>
 
-  <!-- Контент вкладок -->
   <main class="max-w-screen-xl mx-auto px-4 py-8">
-    <!-- Пользователи -->
     <section id="users-tab-content" class="tab-content active bg-white shadow rounded-lg p-6">
       <h2 class="text-2xl font-bold mb-4">Управление пользователями</h2>
       <div class="overflow-x-auto">
@@ -179,7 +169,6 @@
       </div>
     </section>
 
-    <!-- Блюда -->
     <section id="dishes-tab-content" class="tab-content hidden bg-white shadow rounded-lg p-6 mt-6">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-2xl font-bold">Управление меню</h2>
@@ -208,7 +197,6 @@
       </div>
     </section>
 
-    <!-- Заказы -->
     <section id="orders-tab-content" class="tab-content hidden bg-white shadow rounded-lg p-6 mt-6">
       <h2 class="text-2xl font-bold mb-4">Управление заказами</h2>
       <div class="overflow-x-auto">
@@ -229,8 +217,6 @@
         </table>
       </div>
     </section>
-
-    <!-- Статистика -->
     <section id="stats-tab-content" class="tab-content hidden bg-white shadow rounded-lg p-6 mt-6">
       <h2 class="text-2xl font-bold mb-4">Статистика</h2>
 
@@ -258,7 +244,6 @@
     </section>
   </main>
 
-  <!-- Модальное окно (тот же код, что у тебя был) -->
   <div id="dish-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
     <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
       <div class="mt-3">
@@ -313,7 +298,6 @@
     </div>
   </div>
 
-  <!-- footer -->
   <footer class="bg-white mt-12">
     <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
       <div class="sm:flex sm:items-center sm:justify-between">
@@ -325,7 +309,6 @@
   <script type="module" src="js/avatar.js"></script>
   <script type="module" src="js/admin/main.js"></script>
   <script>
-    // Быстрая привязка UI вкладок (работает до загрузки модулей)
     (function () {
       const tabs = document.querySelectorAll('.tab-button');
       tabs.forEach(tab => {
@@ -336,17 +319,13 @@
 
           document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
           const content = document.getElementById(target + '-tab-content');
-          // поддержка старого id-формата (мы используем id="users-tab-content")
           const alt = document.getElementById(target + '-tab-content') || document.getElementById(target + '-tab-content');
-          // правильный выбор по текущей разметке:
           const section = document.getElementById(target + '-tab-content') || document.getElementById(target + '-tab-content');
 
-          // our sections are id like users-tab-content; try that:
           const sect = document.getElementById(target + '-tab-content');
           if (sect) {
             sect.classList.remove('hidden');
           } else {
-            // fallback: try sections by exact ids we used
             const map = {
               'users': document.getElementById('users-tab-content'),
               'dishes': document.getElementById('dishes-tab-content'),
@@ -361,7 +340,6 @@
         });
       });
 
-      // activate first tab if none active
       if (!document.querySelector('.tab-button.active')) {
         const first = document.querySelector('.tab-button');
         if (first) first.click();

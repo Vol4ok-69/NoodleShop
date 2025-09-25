@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
   loadUserData();
 });
 
-// -------------------- Загрузка данных --------------------
 async function loadUserData() {
   const token = localStorage.getItem('token');
   const accountInfo = document.getElementById('account-info');
@@ -25,7 +24,6 @@ async function loadUserData() {
     
     currentUserId = parseInt(payload.userId);
 
-    // Получаем данные пользователя из базы
     userData = await GetUserFromBase();
     
     if (!userData) {
@@ -41,7 +39,6 @@ async function loadUserData() {
   }
 }
 
-// -------------------- UI рендер --------------------
 function displayUserData(user) {
   const accountInfo = document.getElementById('account-info');
 
@@ -138,7 +135,6 @@ function renderField(label, field, value) {
   `;
 }
 
-// -------------------- Обновление в БД (универсально) --------------------
 async function updateUserInDB(updatedFields) {
   const usersRef = ref(db, 'Users');
   const snapshot = await get(usersRef);
@@ -164,7 +160,6 @@ async function updateUserInDB(updatedFields) {
   }
 }
 
-// -------------------- UI: редактирование --------------------
 window.enableEdit = function(field) {
   const view = document.getElementById(`${field}-view`);
   const editBlock = document.getElementById(`${field}-edit-block`);
@@ -187,7 +182,6 @@ window.cancelEdit = function(field) {
   if (input) input.value = userData[field] || '';
 };
 
-// -------------------- Сохранение полей --------------------
 window.saveField = async function(field) {
   const input = document.getElementById(`${field}-edit`);
   if (!input) return;
@@ -235,7 +229,7 @@ window.saveField = async function(field) {
   }
 };
 
-// -------------------- Смена пароля --------------------
+
 window.changePassword = async function() {
   const currentPassword = document.getElementById('current-password').value;
   const newPassword = document.getElementById('new-password').value;
@@ -269,7 +263,6 @@ window.changePassword = async function() {
   }
 };
 
-// -------------------- Аватар: загрузка/удаление --------------------
 async function onAvatarSelected(e) {
   const file = e.target.files && e.target.files[0];
   if (!file) return;
@@ -369,7 +362,6 @@ async function onRemoveAvatar() {
   }
 }
 
-// -------------------- Хелперы для изображений --------------------
 function resizeImageFileToBlob(file, maxW, maxH, quality = 0.8) {
   return new Promise((resolve, reject) => {
     const img = new Image();

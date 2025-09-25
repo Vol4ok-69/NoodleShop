@@ -30,22 +30,17 @@ document.addEventListener('DOMContentLoaded', async function() {
   try {
     const user = await GetUserFromBase();
     
-    // Проверяем, авторизован ли пользователь
     if (user) {
-      // Обновляем интерфейс с данными пользователя
       userFullname.textContent = `${user.name} ${user.surname}`;
       userLogin.textContent = user.login;
       
-      // Обрабатываем аватар пользователя
       if (user.avatar) {
         try {
-          // Проверяем, является ли аватар Google Images ссылкой
           if (user.avatar.includes('google.com/imgres')) {
             const imageUrl = GetImageFromGoogleImage(user.avatar);
             userAvatar.style.backgroundImage = `url('${imageUrl}')`;
             userAvatar.textContent = '';
           } else {
-            // Прямая ссылка на изображение
             userAvatar.style.backgroundImage = `url('${user.avatar}')`;
             userAvatar.textContent = '';
           }
@@ -56,11 +51,9 @@ document.addEventListener('DOMContentLoaded', async function() {
           userAvatar.textContent = user.name.charAt(0) + user.surname.charAt(0);
         }
       } else {
-        // Если аватара нет, показываем инициалы
         userAvatar.textContent = user.name.charAt(0) + user.surname.charAt(0);
       }
       
-      // Показываем меню пользователя, скрываем кнопку входа
       loginBtn.classList.add('hidden');
       userMenu.classList.remove('hidden');
       
@@ -73,7 +66,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     console.error(e);
   }
   
-  // Обработчик выхода из системы
   logoutBtn.addEventListener('click', function() {
     localStorage.removeItem('token');
     window.location.reload();
@@ -81,18 +73,15 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 function GetImageFromGoogleImage(url) {
-  // Парсим URL и извлекаем параметры
   const urlObj = new URL(url);
   const params = new URLSearchParams(urlObj.search);
   
-  // Получаем закодированный URL изображения
   const encodedImageUrl = params.get('imgurl');
   
   if (!encodedImageUrl) {
     throw new Error('URL изображения не найден в параметрах ссылки');
   }
 
-  // Декодируем URL
   const imageUrl = decodeURIComponent(encodedImageUrl);
 
   return imageUrl;

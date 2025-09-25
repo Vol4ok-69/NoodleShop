@@ -40,7 +40,6 @@ function loadUserData() {
     }
 }
 
-// Загрузка корзины из базы данных
 function loadCart() {
     if (!currentUser) {
         showAuthMessage();
@@ -52,7 +51,6 @@ function loadCart() {
     onValue(cartRef, (snapshot) => {
         const data = snapshot.val();
         if (data && data.items) {
-            // items в БД хранится как объект с ключами id блюда
             cartItems = Object.values(data.items);
             displayCart();
         } else {
@@ -65,10 +63,9 @@ function loadCart() {
     });
 }
 
-// Отображение пустой корзины
 function displayEmptyCart() {
     const cartContainer = document.getElementById('cart-container');
-    if (!cartContainer) return; // защита на случай вызова вне страницы
+    if (!cartContainer) return;
 
     cartContainer.innerHTML = `
         <div class="bg-white shadow-lg rounded-lg p-8 text-center">
@@ -86,10 +83,9 @@ function displayEmptyCart() {
     `;
 }
 
-// Отображение корзины с товарами
 function displayCart() {
     const cartContainer = document.getElementById('cart-container');
-    if (!cartContainer) return; // защита
+    if (!cartContainer) return;
 
     if (cartItems.length === 0) {
         displayEmptyCart();
@@ -98,7 +94,6 @@ function displayCart() {
 
     let total = 0;
 
-    // Рассчитываем общую сумму
     cartItems.forEach(item => {
         total += item.price * item.quantity;
     });
@@ -146,7 +141,6 @@ function displayCart() {
         </div>
     `;
 
-    // Добавляем обработчики событий
     document.querySelectorAll('.increase-quantity').forEach(button => {
         button.addEventListener('click', function() {
             const dishId = this.getAttribute('data-id');
@@ -177,7 +171,6 @@ function displayCart() {
     }
 }
 
-// Обновление количества товара
 async function updateQuantity(dishId, change) {
     if (!currentUser) return;
 
@@ -191,32 +184,24 @@ async function updateQuantity(dishId, change) {
         return;
     }
 
-    // Обновляем локально
     cartItems[itemIndex].quantity = newQuantity;
     
-    // Обновляем в базе данных
     const cartRef = ref(db, `Carts/${currentUser}/items/${dishId}`);
     await update(cartRef, { 
         quantity: newQuantity,
         lastUpdated: Date.now()
     });
-    
-    // Обновляем отображение
     displayCart();
 }
 
-// Удаление товара из корзины
 async function removeFromCart(dishId) {
     if (!currentUser) return;
 
-    // Удаляем из базы данных
     const cartRef = ref(db, `Carts/${currentUser}/items/${dishId}`);
     await remove(cartRef);
     
-    // Обновляем локальный массив
     cartItems = cartItems.filter(item => item.id !== dishId);
-    
-    // Обновляем отображение
+
     if (cartItems.length === 0) {
         displayEmptyCart();
     } else {
@@ -224,7 +209,6 @@ async function removeFromCart(dishId) {
     }
 }
 
-// Показать сообщение о необходимости авторизации
 function showAuthMessage() {
     const cartContainer = document.getElementById('cart-container');
     if (!cartContainer) return;
@@ -245,9 +229,7 @@ function showAuthMessage() {
     `;
 }
 
-// Экспортируем функции для использования в других модуль
 export async function addToCart(dish) {
-    // Обновим currentUser на случай, если функция вызвана с новой сессией
     if (!currentUser) {
         const token = localStorage.getItem('token');
         if (token) {
@@ -263,7 +245,6 @@ export async function addToCart(dish) {
     }
 
     if (!currentUser) {
-        // Если пользователь не авторизован, просим войти
         alert('Для добавления в корзину необходимо войти в систему');
         window.location.href = 'authentication.html';
         return;
@@ -271,17 +252,14 @@ export async function addToCart(dish) {
 
     const cartRef = ref(db, `Carts/${currentUser}/items/${dish.id}`);
     
-    // Проверяем, есть ли уже этот товар в корзине
     const snapshot = await get(cartRef);
     if (snapshot.exists()) {
-        // Если товар уже есть, увеличиваем количество
         const currentQuantity = snapshot.val().quantity;
         await update(cartRef, { 
             quantity: currentQuantity + 1,
             lastUpdated: Date.now()
         });
     } else {
-        // Если товара нет, добавляем новый
         await set(cartRef, {
             id: dish.id,
             name: dish.name,

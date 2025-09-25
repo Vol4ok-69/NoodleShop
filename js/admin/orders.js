@@ -43,7 +43,6 @@ function displayOrders(orders) {
     `;
   }).join('');
 
-  // привязываем обработчики
   document.querySelectorAll('.order-status').forEach(s => s.addEventListener('change', onChangeStatus));
   document.querySelectorAll('.view-order').forEach(b => b.addEventListener('click', onViewOrder));
 }
@@ -63,7 +62,6 @@ async function onChangeStatus(e) {
 
 function onViewOrder(e) {
   const key = e.target.getAttribute('data-order-key');
-  // простой просмотр: показать alert с ключом. Можно сделать модал с деталями.
   Swal.fire({ title: `Заказ ${key}`, html: `<p>Откройте Orders/${key} в БД для подробностей.</p>` });
 }
 

@@ -1,4 +1,3 @@
-// main.js — точка входа админ-панели
 import { initTabs } from './ui-tabs.js';
 import { initModal } from './modal.js';
 import { loadUsers } from './users.js';
