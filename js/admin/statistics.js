@@ -1,46 +1,35 @@
-import { db, ref, onValue } from './firebase-config.js';
+import { db, ref, onValue } from '../firebase-config.js';
 
 export function loadStatistics() {
-    const usersRef = ref(db, 'Users');
-    const dishesRef = ref(db, 'Dishes');
-    
-    onValue(usersRef, (snapshot) => {
-        const data = snapshot.val();
-        const users = data ? Object.values(data) : [];
-        document.getElementById('total-users').textContent = users.length;
-    });
-    
-    onValue(dishesRef, (snapshot) => {
-        const data = snapshot.val();
-        const dishes = data ? Object.values(data) : [];
-        
-        document.getElementById('total-dishes').textContent = dishes.length;
-        
-        const totalSales = dishes.reduce((sum, dish) => {
-            return sum + (dish.price * (dish.purchased || 0));
-        }, 0);
-        
-        document.getElementById('total-sales').textContent = `${totalSales}₽`;
-        updatePopularDishes(dishes);
-    });
+  const usersRef = ref(db, 'Users');
+  const dishesRef = ref(db, 'Dishes');
+
+  onValue(usersRef, (snap) => {
+    const data = snap.val();
+    const users = data ? (Array.isArray(data) ? data.filter(Boolean) : Object.values(data)) : [];
+    const el = document.getElementById('total-users');
+    if (el) el.textContent = users.length;
+  });
+
+  onValue(dishesRef, (snap) => {
+    const data = snap.val();
+    const dishes = data ? (Array.isArray(data) ? data.filter(Boolean) : Object.values(data)) : [];
+    const el = document.getElementById('total-dishes');
+    if (el) el.textContent = dishes.length;
+    const totalSales = dishes.reduce((s, d) => s + ((d.price || 0) * (d.purchased || 0)), 0);
+    const salesEl = document.getElementById('total-sales');
+    if (salesEl) salesEl.textContent = `${totalSales}₽`;
+    updatePopular(dishes);
+  });
+
+  window.addEventListener('dishesStatisticsUpdated', (e) => updatePopular(e.detail.dishes));
 }
 
-function updatePopularDishes(dishes) {
-    const popularDishesContainer = document.getElementById('popular-dishes');
-    
-    const popularDishes = [...dishes]
-        .sort((a, b) => (b.purchased || 0) - (a.purchased || 0))
-        .slice(0, 5);
-    
-    if (popularDishes.length === 0) {
-        popularDishesContainer.innerHTML = '<p class="text-gray-500">Нет данных о продажах</p>';
-        return;
-    }
-    
-    popularDishesContainer.innerHTML = popularDishes.map(dish => `
-        <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
-            <span>${dish.name}</span>
-            <span class="font-semibold">${dish.purchased || 0} продаж</span>
-        </div>
-    `).join('');
+function updatePopular(dishes) {
+  const container = document.getElementById('popular-dishes');
+  if (!container) return;
+  const list = Array.isArray(dishes) ? dishes.slice() : [];
+  const top = list.sort((a, b) => (b.purchased || 0) - (a.purchased || 0)).slice(0, 5);
+  if (!top.length) { container.innerHTML = '<p class="text-gray-500">Нет данных о продажах</p>'; return; }
+  container.innerHTML = top.map(d => `<div class="flex justify-between items-center p-2 bg-gray-50 rounded"><span>${d.name}</span><span class="font-semibold">${d.purchased || 0} продаж</span></div>`).join('');
 }

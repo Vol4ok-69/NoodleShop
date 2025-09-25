@@ -1,174 +1,133 @@
-import { db, ref, onValue, set, update, remove } from './firebase-config.js';
+import { db, ref, onValue, set, update, remove, get } from '../firebase-config.js';
+import { findKeyById } from './utils.js';
 
 let dishesData = [];
 let sortField = 'name';
 let sortDirection = 'asc';
 
 export function loadDishes() {
-    const dishesRef = ref(db, 'Dishes');
-    
-    onValue(dishesRef, (snapshot) => {
-        const data = snapshot.val();
-        dishesData = data ? Object.entries(data).map(([key, value]) => ({ key, ...value })) : [];
-        sortDishes('name');
-    });
-}
-
-export function sortDishes(field) {
-    if (sortField === field) {
-        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-    } else {
-        sortField = field;
-        sortDirection = 'asc';
-    }
-    
-    dishesData.sort((a, b) => {
-        let valueA = a[field];
-        let valueB = b[field];
-        
-        if (typeof valueA === 'string') {
-            valueA = valueA.toLowerCase();
-            valueB = valueB.toLowerCase();
-        }
-        
-        if (valueA < valueB) return sortDirection === 'asc' ? -1 : 1;
-        if (valueA > valueB) return sortDirection === 'asc' ? 1 : -1;
-        return 0;
-    });
-    
+  const dishesRef = ref(db, 'Dishes');
+  onValue(dishesRef, snapshot => {
+    const data = snapshot.val();
+    dishesData = data ? (Array.isArray(data) ? data.filter(Boolean) : Object.values(data)) : [];
+    sortDishes(sortField, false);
+    updateDishesStatistics(dishesData);
     displayDishes(dishesData);
+  }, (err) => console.error('dishes onValue error', err));
 }
 
-function displayDishes(dishes) {
-    const tbody = document.getElementById('dishes-table-body');
-    
-    if (dishes.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4">Блюда не найдены</td></tr>';
-        return;
-    }
-    
-    tbody.innerHTML = dishes.map(dish => `
-        <tr class="border-b">
-            <td class="px-4 py-2">${dish.id}</td>
-            <td class="px-4 py-2">${dish.name}</td>
-            <td class="px-4 py-2">${dish.category}</td>
-            <td class="px-4 py-2">${dish.price}₽</td>
-            <td class="px-4 py-2">${dish.purchased || 0}</td>
-            <td class="px-4 py-2">
-                <button class="edit-dish text-blue-500 hover:text-blue-700 mr-2" data-dish-key="${dish.key}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                    </svg>
-                </button>
-                <button class="delete-dish text-red-500 hover:text-red-700" data-dish-key="${dish.key}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                    </svg>
-                </button>
-            </td>
-        </tr>
-    `).join('');
-    
-    addDishEventListeners();
+export function displayDishes(dishes) {
+  const tbody = document.getElementById('dishes-table-body');
+  if (!tbody) return;
+  if (!dishes || dishes.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-gray-500">Блюда не найдены</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = dishes.map(d => `
+    <tr class="border-b">
+      <td class="px-4 py-2">${d.id}</td>
+      <td class="px-4 py-2">${d.name}</td>
+      <td class="px-4 py-2">${d.category}</td>
+      <td class="px-4 py-2">${d.price}₽</td>
+      <td class="px-4 py-2">${d.purchased || 0}</td>
+      <td class="px-4 py-2">
+        <button class="edit-dish text-blue-500 mr-2" data-dish-id="${d.id}">Ред.</button>
+        <button class="delete-dish text-red-500" data-dish-id="${d.id}">Уд.</button>
+      </td>
+    </tr>
+  `).join('');
+
+  addDishEventListeners();
 }
 
 function addDishEventListeners() {
-    document.querySelectorAll('.edit-dish').forEach(button => {
-        button.addEventListener('click', function() {
-            const dishKey = this.getAttribute('data-dish-key');
-            const dish = dishesData.find(d => d.key === dishKey);
-            
-            if (dish) {
-                window.openEditDishModal(dish);
-            }
-        });
-    });
-    
-    document.querySelectorAll('.delete-dish').forEach(button => {
-        button.addEventListener('click', function() {
-            const dishKey = this.getAttribute('data-dish-key');
-            deleteDish(dishKey);
-        });
-    });
+  document.querySelectorAll('.edit-dish').forEach(b => b.addEventListener('click', onEditDish));
+  document.querySelectorAll('.delete-dish').forEach(b => b.addEventListener('click', onDeleteDish));
 }
 
-async function deleteDish(dishKey) {
-    const result = await Swal.fire({
-        title: 'Вы уверены?',
-        text: "Блюдо будет удалено из меню",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Да, удалить!',
-        cancelButtonText: 'Отмена'
-    });
-    
-    if (result.isConfirmed) {
-        try {
-            const dishRef = ref(db, `Dishes/${dishKey}`);
-            await remove(dishRef);
-            
-            Swal.fire({
-                icon: 'success',
-                title: 'Удалено!',
-                text: 'Блюдо было удалено из меню'
-            });
-        } catch (error) {
-            console.error('Ошибка удаления блюда:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Ошибка',
-                text: 'Не удалось удалить блюдо'
-            });
-        }
-    }
+async function onEditDish(e) {
+  const id = e.target.getAttribute('data-dish-id');
+  const dish = dishesData.find(d => d.id === id);
+  if (!dish) return Swal.fire({ icon: 'error', title: 'Ошибка', text: 'Блюдо не найдено' });
+  window.dispatchEvent(new CustomEvent('openDishModal', { detail: { dish } }));
+}
+
+async function onDeleteDish(e) {
+  const id = e.target.getAttribute('data-dish-id');
+  const confirmed = await Swal.fire({
+    title: 'Вы уверены?',
+    text: 'Блюдо будет удалено',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Да, удалить!'
+  });
+  if (!confirmed.isConfirmed) return;
+  try {
+    const key = await findKeyById('Dishes', id);
+    if (key === null) throw new Error('Не найден ключ блюда');
+    const dishRef = ref(db, `Dishes/${key}`);
+    await remove(dishRef);
+    Swal.fire({ icon: 'success', title: 'Удалено', text: 'Блюдо удалено' });
+  } catch (err) {
+    console.error(err);
+    Swal.fire({ icon: 'error', title: 'Ошибка', text: 'Не удалось удалить блюдо' });
+  }
 }
 
 export async function addDish(dishData) {
-    try {
-        const dishesRef = ref(db, 'Dishes');
-        const newDishRef = push(dishesRef);
-        
-        await set(newDishRef, {
-            ...dishData,
-            purchased: 0
-        });
-        
-        Swal.fire({
-            icon: 'success',
-            title: 'Успех',
-            text: 'Блюдо добавлено в меню'
-        });
-    } catch (error) {
-        console.error('Ошибка добавления блюда:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Ошибка',
-            text: 'Не удалось добавить блюдо'
-        });
+  try {
+    const keyExisting = await findKeyById('Dishes', dishData.id);
+    if (keyExisting !== null) throw new Error('Блюдо с таким id уже существует');
+
+    const dishesRef = ref(db, 'Dishes');
+    const snap = await get(dishesRef);
+    const val = snap.val();
+    if (Array.isArray(val)) {
+      const idx = val.length;
+      await set(ref(db, `Dishes/${idx}`), { ...dishData, purchased: 0 });
+    } else {
+      const newKey = Date.now().toString();
+      await set(ref(db, `Dishes/${newKey}`), { ...dishData, purchased: 0 });
     }
+    Swal.fire({ icon: 'success', title: 'Успех', text: 'Блюдо добавлено' });
+  } catch (err) {
+    console.error(err);
+    Swal.fire({ icon: 'error', title: 'Ошибка', text: err.message || 'Не удалось добавить блюдо' });
+  }
 }
 
-export async function updateDish(dishKey, dishData) {
-    try {
-        const dishRef = ref(db, `Dishes/${dishKey}`);
-        await update(dishRef, dishData);
-        
-        Swal.fire({
-            icon: 'success',
-            title: 'Успех',
-            text: 'Блюдо обновлено'
-        });
-    } catch (error) {
-        console.error('Ошибка обновления блюда:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Ошибка',
-            text: 'Не удалось обновить блюдо'
-        });
-    }
+export async function updateDish(dishId, dishData) {
+  try {
+    const key = await findKeyById('Dishes', dishId);
+    if (key === null) throw new Error('Блюдо не найдено');
+    const dishRef = ref(db, `Dishes/${key}`);
+    await update(dishRef, dishData);
+    Swal.fire({ icon: 'success', title: 'Успех', text: 'Блюдо обновлено' });
+  } catch (err) {
+    console.error(err);
+    Swal.fire({ icon: 'error', title: 'Ошибка', text: 'Не удалось обновить блюдо' });
+  }
 }
 
-// Добавляем функции в глобальную область видимости для обработки сортировки
-window.sortDishes = sortDishes;
+export function sortDishes(field, rerender = true) {
+  if (sortField === field) sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+  else { sortField = field; sortDirection = 'asc'; }
+  dishesData.sort((a, b) => {
+    let va = a[field]; let vb = b[field];
+    if (typeof va === 'string') { va = va.toLowerCase(); vb = vb.toLowerCase(); }
+    if (va < vb) return sortDirection === 'asc' ? -1 : 1;
+    if (va > vb) return sortDirection === 'asc' ? 1 : -1;
+    return 0;
+  });
+  if (rerender) displayDishes(dishesData);
+}
+
+function updateDishesStatistics(dishes) {
+  const totalDishesEl = document.getElementById('total-dishes');
+  if (totalDishesEl) totalDishesEl.textContent = dishes.length;
+  const totalSales = dishes.reduce((s, d) => s + ((d.price || 0) * (d.purchased || 0)), 0);
+  const totalSalesEl = document.getElementById('total-sales');
+  if (totalSalesEl) totalSalesEl.textContent = `${totalSales}₽`;
+  window.dispatchEvent(new CustomEvent('dishesStatisticsUpdated', { detail: { dishes } }));
+}

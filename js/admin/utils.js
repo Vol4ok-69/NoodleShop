@@ -1,24 +1,15 @@
-export function initTabs() {
-    const tabs = document.querySelectorAll('[data-tab-target]');
-    
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const target = tab.getAttribute('data-tab-target');
-            
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            document.getElementById(`${target}-tab-content`).classList.add('active');
-            tab.classList.add('active');
-        });
-    });
-    
-    if (tabs.length > 0) {
-        tabs[0].click();
-    }
+import { db, ref, get } from '../firebase-config.js';
+
+// Находит ключ по полю id в коллекции Realtime DB (поддерживает массив или объект)
+export async function findKeyById(collectionPath, id) {
+  const refCol = ref(db, collectionPath);
+  const snap = await get(refCol);
+  const val = snap.val();
+  if (!val) return null;
+  if (Array.isArray(val)) {
+    const idx = val.findIndex(x => x && x.id === id);
+    return idx === -1 ? null : String(idx);
+  }
+  const key = Object.keys(val).find(k => val[k] && val[k].id === id);
+  return key || null;
 }
