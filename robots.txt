@@ -5,4 +5,4 @@ Disallow: /account.html
 
 Allow: /
 
-Sitemap: https://example.com/sitemap.xml
+Sitemap: https://vol4ok-69.github.io/NoodleShop/sitemap.xml
