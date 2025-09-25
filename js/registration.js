@@ -1,4 +1,16 @@
 import { db, ref,get,set } from './firebase-config.js';
+import { GetUserFromBase } from './token.js';
+
+
+const user = await GetUserFromBase();
+if (user) {
+    Swal.fire({
+      icon: '',
+      title: 'Вы уже авторизованы',
+      text: 'У вас нет прав для доступа, выйдите для продолжения'
+    }).then(() => { window.location.href = 'index.html'; });
+}
+
 
 async function registrationUser() {
     const email = document.getElementById("Email").value;

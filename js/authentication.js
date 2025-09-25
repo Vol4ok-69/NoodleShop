@@ -3,6 +3,16 @@ import {get } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.
 import { GetHash } from './registration.js';
 import { GetUserFromBase } from './token.js';
 
+
+const user = await GetUserFromBase();
+if (user) {
+    Swal.fire({
+      icon: '',
+      title: 'Вы уже авторизованы',
+      text: 'У вас нет прав для доступа, выйдите для продолжения'
+    }).then(() => { window.location.href = 'index.html'; });
+}
+
 async function loginUser() {
     //получение email и пароля из формы
     const emailLogin = document.getElementById("emailLogin").value;
