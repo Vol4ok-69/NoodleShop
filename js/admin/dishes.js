@@ -14,7 +14,7 @@ export function loadDishes() {
     updateDishesStatistics(dishesData);
     displayDishes(dishesData);
   },
-  (err) => console.error('dishes onValue error', err));
+    (err) => console.error('dishes onValue error', err));
 }
 
 export function displayDishes(dishes) {

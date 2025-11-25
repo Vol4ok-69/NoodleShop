@@ -1,15 +1,16 @@
-import { db, ref,get,set } from './firebase-config.js';
+import { db, ref, get, set } from './firebase-config.js';
 import { GetUserFromBase } from './token.js';
 
-if (document.location.pathname.endsWith("registration.html"))
-{const user = await GetUserFromBase();
-if (user) {
-    Swal.fire({
-      icon: 'warn',
-      title: 'Вы уже авторизованы',
-      text: 'У вас нет прав для доступа, выйдите для продолжения'
-    }).then(() => { window.location.href = 'index.html'; });
-}}
+if (document.location.pathname.endsWith("registration.html")) {
+    const user = await GetUserFromBase();
+    if (user) {
+        Swal.fire({
+            icon: 'warn',
+            title: 'Вы уже авторизованы',
+            text: 'У вас нет прав для доступа, выйдите для продолжения'
+        }).then(() => { window.location.href = 'index.html'; });
+    }
+}
 
 
 async function registrationUser() {
@@ -29,8 +30,8 @@ async function registrationUser() {
         });
         return;
     }
-    
-    if(!isEmail(email)){
+
+    if (!isEmail(email)) {
         Swal.fire({
             icon: "error",
             title: "Ошибка...",
@@ -38,8 +39,8 @@ async function registrationUser() {
         });
         return;
     }
-    
-    if(!isPhoneNumber(phone)){
+
+    if (!isPhoneNumber(phone)) {
         Swal.fire({
             icon: "error",
             title: "Ошибка...",
@@ -47,8 +48,8 @@ async function registrationUser() {
         });
         return;
     }
-    
-    if(password !== confirmPassword){
+
+    if (password !== confirmPassword) {
         Swal.fire({
             icon: "error",
             title: "Ошибка...",
@@ -62,10 +63,10 @@ async function registrationUser() {
         const snapshot = await get(usersRef);
         const users = snapshot.val() || [];
 
-        const userExist = users.some(u => 
+        const userExist = users.some(u =>
             u && (
-                (u.login && u.login.toLowerCase() === login.toLowerCase()) || 
-                (u.email && u.email.toLowerCase() === email.toLowerCase()) || 
+                (u.login && u.login.toLowerCase() === login.toLowerCase()) ||
+                (u.email && u.email.toLowerCase() === email.toLowerCase()) ||
                 (u.phone && u.phone === phone)
             )
         );
@@ -110,7 +111,7 @@ async function registrationUser() {
                 };
                 const sHeader = JSON.stringify(header);
                 const sPayload = JSON.stringify(payload);
-    
+
                 const token = KJUR.jws.JWS.sign("HS256", sHeader, sPayload, secret);
                 localStorage.setItem('token', token);
                 window.location.href = 'index.html';
@@ -128,23 +129,23 @@ async function registrationUser() {
 function GetHash(password) {
     const prefix = "TiMoHa69_";
     const suffix = "_IdIot_69";
-    
+
     let hash = 0;
     for (let i = 0; i < password.length; i++) {
         const char = password.charCodeAt(i);
         hash = ((hash << 5) - hash) + char;
         hash = hash & hash;
     }
-    
+
     let a = prefix + hash.toString(16) + suffix;
     hash = 0;
-    
+
     for (let i = 0; i < a.length; i++) {
         const char = a.charCodeAt(i);
         hash = ((hash << 5) - hash) + char;
         hash = hash & hash;
     }
-    
+
     return hash.toString(16);
 }
 
@@ -152,13 +153,13 @@ async function GetId() {
     try {
         const snapshot = await get(ref(db, '/'));
         const allData = snapshot.val();
-        
+
         const users = allData && allData.Users ? allData.Users : [];
-        
+
         if (users.length === 0) {
             return Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
         }
-        
+
         let maxId = 0;
         for (const user of users) {
             if (user && user.id) {
@@ -168,9 +169,9 @@ async function GetId() {
                 }
             }
         }
-        
+
         return maxId > 0 ? maxId + 1 : Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
-        
+
     } catch (error) {
         return Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
     }
@@ -178,61 +179,61 @@ async function GetId() {
 
 function isEmail(email) {
     if (!email || typeof email !== 'string') return false;
-    
+
     const trimmedEmail = email.trim();
     if (trimmedEmail.length === 0) return false;
-    
+
     if (trimmedEmail.indexOf('@') === -1) return false;
     if (trimmedEmail.indexOf('.') === -1) return false;
-    
+
     const parts = trimmedEmail.split('@');
     if (parts.length !== 2) return false;
-    
+
     const [localPart, domainPart] = parts;
-    
+
     if (localPart.length === 0) return false;
     if (localPart.startsWith('.') || localPart.endsWith('.')) return false;
     if (localPart.includes('..')) return false;
-    
+
     if (domainPart.length === 0) return false;
     if (domainPart.startsWith('.') || domainPart.endsWith('.')) return false;
     if (domainPart.includes('..')) return false;
 
     if (domainPart.indexOf('.') === -1) return false;
-    
+
     const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-    
+
     return emailRegex.test(trimmedEmail);
 }
 
 function isPhoneNumber(phone) {
     if (!phone || typeof phone !== 'string') return false;
-    
+
     let cleanedPhone = phone.trim();
-    
+
     const hasPlus = cleanedPhone.startsWith('+');
     if (hasPlus) {
         cleanedPhone = '+' + cleanedPhone.substring(1).replace(/\D/g, '');
     } else {
         cleanedPhone = cleanedPhone.replace(/\D/g, '');
     }
-    
+
     if (hasPlus) {
         if (cleanedPhone.length < 12 || cleanedPhone.length > 16) return false;
     } else {
         if (cleanedPhone.length < 10 || cleanedPhone.length > 11) return false;
     }
-    
+
     if (hasPlus) {
         if (!/^\+\d+$/.test(cleanedPhone)) return false;
     } else {
         if (!/^\d+$/.test(cleanedPhone)) return false;
     }
-    
+
     if (hasPlus && cleanedPhone.startsWith('+7') && cleanedPhone.length !== 12) return false;
-    
+
     return true;
 }
 if (document.location.pathname.endsWith("registration.html"))
     document.getElementById('registerButton').addEventListener('click', registrationUser);
-export {isEmail,isPhoneNumber,GetHash};
+export { isEmail, isPhoneNumber, GetHash };

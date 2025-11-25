@@ -7,14 +7,14 @@ function loadMenu() {
     if (!menuContainer) {
         return;
     }
-    
+
     const dishesRef = ref(db, 'Dishes/');
-    
+
     onValue(dishesRef, (snapshot) => {
         const data = snapshot.val();
-        
+
         menuContainer.innerHTML = '';
-        
+
         if (!data) {
             menuContainer.innerHTML = `
                 <div class="col-span-3 text-center py-10">
@@ -24,32 +24,32 @@ function loadMenu() {
             `;
             return;
         }
-        
+
         let dishes = [];
         if (Array.isArray(data)) {
             dishes = data.filter(Boolean).map(d => ({ id: d.id || d.name || '', ...d }));
         } else {
             dishes = Object.keys(data).map(key => ({ id: data[key].id || key, ...data[key] }));
         }
-        
+
         const categories = {};
         dishes.forEach(dish => {
             const category = dish.category || 'Другое';
             if (!categories[category]) categories[category] = [];
             categories[category].push(dish);
         });
-        
+
         Object.keys(categories).forEach(category => {
             const categorySection = document.createElement('div');
             categorySection.className = 'category-section mb-12';
-            
+
             categorySection.innerHTML = `
                 <h2 class="text-3xl font-bold mb-8 text-center">${category}</h2>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 category-dishes"></div>
             `;
-            
+
             menuContainer.appendChild(categorySection);
-            
+
             const dishesContainer = categorySection.querySelector('.category-dishes');
             categories[category].forEach(dish => {
                 const dishCard = `
@@ -76,11 +76,11 @@ function loadMenu() {
                 dishesContainer.innerHTML += dishCard;
             });
         });
-        
+
         document.querySelectorAll('.add-to-cart').forEach(button => {
             button.addEventListener('click', addToCartHandler);
         });
-        
+
     }, (error) => {
         if (menuContainer) {
             menuContainer.innerHTML = `
@@ -99,14 +99,14 @@ function addToCartHandler(event) {
     const dishName = button.getAttribute('data-name');
     const dishPrice = parseFloat(button.getAttribute('data-price'));
     const dishImage = button.getAttribute('data-image');
-    
+
     const dish = {
         id: dishId,
         name: dishName,
         price: dishPrice,
         image: dishImage
     };
-    
+
     addToCart(dish);
 }
 

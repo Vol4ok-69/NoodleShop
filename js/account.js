@@ -21,11 +21,11 @@ async function loadUserData() {
   try {
     const payload = GetUserFromToken();
     if (!payload) throw new Error('Invalid token');
-    
+
     currentUserId = parseInt(payload.userId);
 
     userData = await GetUserFromBase();
-    
+
     if (!userData) {
       accountInfo.innerHTML = `<p class="text-red-500">Пользователь не найден</p>`;
       return;
@@ -47,7 +47,7 @@ function displayUserData(user) {
 
       <div class="flex items-center gap-6 mb-6">
         <div id="profile-avatar" class="w-28 h-28 rounded-full bg-gray-200 flex items-center justify-center text-3xl font-bold overflow-hidden"
-             style="${user.avatar ? `background-image: url('${user.avatar}'); background-size: cover; background-position: center;` : '' }">
+             style="${user.avatar ? `background-image: url('${user.avatar}'); background-size: cover; background-position: center;` : ''}">
           ${!user.avatar ? (user.name ? user.name[0] + (user.surname ? user.surname[0] : '') : '') : ''}
         </div>
 
@@ -159,7 +159,7 @@ async function updateUserInDB(updatedFields) {
   }
 }
 
-window.enableEdit = function(field) {
+window.enableEdit = function (field) {
   const view = document.getElementById(`${field}-view`);
   const editBlock = document.getElementById(`${field}-edit-block`);
   const editBtn = document.getElementById(`${field}-edit-btn`);
@@ -170,7 +170,7 @@ window.enableEdit = function(field) {
   if (input) input.focus();
 };
 
-window.cancelEdit = function(field) {
+window.cancelEdit = function (field) {
   const view = document.getElementById(`${field}-view`);
   const editBlock = document.getElementById(`${field}-edit-block`);
   const editBtn = document.getElementById(`${field}-edit-btn`);
@@ -181,7 +181,7 @@ window.cancelEdit = function(field) {
   if (input) input.value = userData[field] || '';
 };
 
-window.saveField = async function(field) {
+window.saveField = async function (field) {
   const input = document.getElementById(`${field}-edit`);
   if (!input) return;
   const newValue = input.value.trim();
@@ -228,7 +228,7 @@ window.saveField = async function(field) {
 };
 
 
-window.changePassword = async function() {
+window.changePassword = async function () {
   const currentPassword = document.getElementById('current-password').value;
   const newPassword = document.getElementById('new-password').value;
   const confirmPassword = document.getElementById('confirm-password').value;
@@ -264,7 +264,7 @@ async function onAvatarSelected(e) {
   const file = e.target.files && e.target.files[0];
   if (!file) return;
 
-  const allowed = ['image/jpeg','image/png','image/webp'];
+  const allowed = ['image/jpeg', 'image/png', 'image/webp'];
   if (!allowed.includes(file.type)) {
     Swal.fire({ icon: 'error', title: 'Ошибка', text: 'Поддерживаются JPG/PNG/WebP' });
     e.target.value = '';
@@ -294,7 +294,7 @@ async function onAvatarSelected(e) {
   }
 }
 
-function fileToResizedDataUrl(file, maxW, maxH, quality=0.6) {
+function fileToResizedDataUrl(file, maxW, maxH, quality = 0.6) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {

@@ -4,7 +4,7 @@ export function loadOrders() {
   const ordersRef = ref(db, 'Orders');
   onValue(ordersRef, snapshot => {
     const data = snapshot.val();
-    const orders = data ? (Array.isArray(data) ? data.filter(Boolean) : Object.entries(data).map(([k,v]) => ({ key: k, ...v }))) : [];
+    const orders = data ? (Array.isArray(data) ? data.filter(Boolean) : Object.entries(data).map(([k, v]) => ({ key: k, ...v }))) : [];
     displayOrders(orders);
   }, (err) => console.error('orders onValue error', err));
 }

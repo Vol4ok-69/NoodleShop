@@ -2,15 +2,15 @@ import { db, ref, onValue } from './firebase-config.js';
 
 function loadTop3Dishes() {
     const dishesContainer = document.getElementById('top3-dishes');
-    
+
     const dishesRef = ref(db, 'Dishes/');
-    
+
     onValue(dishesRef, (snapshot) => {
-        
+
         dishesContainer.innerHTML = '';
-        
+
         const data = snapshot.val();
-        
+
         if (!data) {
             dishesContainer.innerHTML = `
                 <div class="col-span-3 text-center py-10">
@@ -19,23 +19,23 @@ function loadTop3Dishes() {
             `;
             return;
         }
-        
+
         const dishes = Object.keys(data).map(key => {
             return {
                 id: key,
                 ...data[key]
             };
         });
-        
+
         dishes.sort((a, b) => {
             const aPurchased = a.purchased || 0;
             const bPurchased = b.purchased || 0;
             return bPurchased - aPurchased;
         });
-        
+
         const top3Dishes = dishes.slice(0, 3);
-        
-        
+
+
         top3Dishes.forEach((dish) => {
             const dishCard = `
                 <div class="bg-white shadow-lg rounded-lg overflow-hidden">

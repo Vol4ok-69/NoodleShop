@@ -2,7 +2,7 @@ import { db, ref, onValue, set, update, remove, get } from './firebase-config.js
 
 let cartItems = [];
 
-let currentUser = (function() {
+let currentUser = (function () {
     const token = localStorage.getItem('token');
     if (!token) return null;
     try {
@@ -14,13 +14,13 @@ let currentUser = (function() {
     }
 })();
 
-document.addEventListener('DOMContentLoaded', function() {
-  if (!document.getElementById('cart-container')) {
-    return;
-  }
+document.addEventListener('DOMContentLoaded', function () {
+    if (!document.getElementById('cart-container')) {
+        return;
+    }
 
-  loadUserData();
-  loadCart();
+    loadUserData();
+    loadCart();
 });
 
 function loadUserData() {
@@ -45,7 +45,7 @@ function loadCart() {
     }
 
     const cartRef = ref(db, `Carts/${currentUser}`);
-    
+
     onValue(cartRef, (snapshot) => {
         const data = snapshot.val();
         if (data && data.items) {
@@ -139,21 +139,21 @@ function displayCart() {
     `;
 
     document.querySelectorAll('.increase-quantity').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const dishId = this.getAttribute('data-id');
             updateQuantity(dishId, 1);
         });
     });
 
     document.querySelectorAll('.decrease-quantity').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const dishId = this.getAttribute('data-id');
             updateQuantity(dishId, -1);
         });
     });
 
     document.querySelectorAll('.remove-item').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const dishId = this.getAttribute('data-id');
             removeFromCart(dishId);
         });
@@ -161,7 +161,7 @@ function displayCart() {
 
     const checkoutBtn = document.getElementById('checkout-btn');
     if (checkoutBtn) {
-        checkoutBtn.addEventListener('click', function() {
+        checkoutBtn.addEventListener('click', function () {
             alert('Оплата пока не реализована. Переходим к оформлению заказа...');
             window.location.href = '#';
         });
@@ -175,16 +175,16 @@ async function updateQuantity(dishId, change) {
     if (itemIndex === -1) return;
 
     const newQuantity = cartItems[itemIndex].quantity + change;
-    
+
     if (newQuantity <= 0) {
         removeFromCart(dishId);
         return;
     }
 
     cartItems[itemIndex].quantity = newQuantity;
-    
+
     const cartRef = ref(db, `Carts/${currentUser}/items/${dishId}`);
-    await update(cartRef, { 
+    await update(cartRef, {
         quantity: newQuantity,
         lastUpdated: Date.now()
     });
@@ -196,7 +196,7 @@ async function removeFromCart(dishId) {
 
     const cartRef = ref(db, `Carts/${currentUser}/items/${dishId}`);
     await remove(cartRef);
-    
+
     cartItems = cartItems.filter(item => item.id !== dishId);
 
     if (cartItems.length === 0) {
@@ -247,11 +247,11 @@ export async function addToCart(dish) {
     }
 
     const cartRef = ref(db, `Carts/${currentUser}/items/${dish.id}`);
-    
+
     const snapshot = await get(cartRef);
     if (snapshot.exists()) {
         const currentQuantity = snapshot.val().quantity;
-        await update(cartRef, { 
+        await update(cartRef, {
             quantity: currentQuantity + 1,
             lastUpdated: Date.now()
         });
@@ -265,6 +265,6 @@ export async function addToCart(dish) {
             lastUpdated: Date.now()
         });
     }
-    
+
     alert(`"${dish.name}" добавлен в корзину!`);
 }

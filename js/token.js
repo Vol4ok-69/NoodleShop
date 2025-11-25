@@ -21,7 +21,7 @@ export async function GetUserFromBase() {
             const usersRef = ref(db, 'Users');
             const snapshot = await get(usersRef);
             const users = snapshot.val();
-            
+
             if (Array.isArray(users)) {
                 return users.find(u => u && u.id === userFromToken.userId);
             } else {
