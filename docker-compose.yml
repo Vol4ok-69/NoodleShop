@@ -8,3 +8,4 @@ services:
     volumes:
       - ./js:/usr/share/nginx/html/js
     restart: unless-stopped
+    network_mode: bridge
